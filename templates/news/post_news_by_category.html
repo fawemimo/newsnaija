@@ -1,0 +1,28 @@
+{% extends 'shared/layout.html' %}
+
+<!-- STATIC CSS -->
+{% block extrastyle %} {% endblock extrastyle %}
+
+<!-- NEWS POST UPLOAD SECTION -->
+{% block loading_content %}
+<div class="container">
+  <div class="wrapper">
+    {% for category in newscategory %}
+    <h1>{{category.title}}</h1>
+    <p>{{category.content}}</p>
+    <p>{{category.date_created}}</p>
+    <p>{{category.status}}</p>
+    
+    <p>source:{% if category.source %}
+        <p>{{category.source}}</p>
+        {% else %}
+        <p> newsnaija</p>
+        {% endif %}
+        
+    </p>
+    <p>{{category.user__first_name}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock loading_content %}
