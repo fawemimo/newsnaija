@@ -1,0 +1,57 @@
+[
+{
+    "model": "news.newscategory",
+    "pk": "30530813-740b-42f0-bcdd-6e6e230ea0f6",
+    "fields": {
+        "name": "SPORTS",
+        "slug": "sports",
+        "is_active": true,
+        "date_created": "2022-12-20T13:15:52.252Z",
+        "date_updated": "2022-12-20T21:21:56.522Z"
+    }
+},
+{
+    "model": "news.newscategory",
+    "pk": "445ee699-a2d1-470a-a4ba-157f5a8a7cee",
+    "fields": {
+        "name": "POLITICS",
+        "slug": "politics",
+        "is_active": true,
+        "date_created": "2022-12-20T13:16:44.102Z",
+        "date_updated": "2022-12-20T13:16:44.102Z"
+    }
+},
+{
+    "model": "news.newscategory",
+    "pk": "46f5aa3b-3cdf-405b-86cf-e1f5952651fc",
+    "fields": {
+        "name": "ENTERTAINMENT",
+        "slug": "entertainment",
+        "is_active": true,
+        "date_created": "2022-12-20T13:17:08.167Z",
+        "date_updated": "2022-12-20T13:17:08.167Z"
+    }
+},
+{
+    "model": "news.newscategory",
+    "pk": "7ab26442-11e7-49b3-8cd2-e5644fbe478a",
+    "fields": {
+        "name": "WORLD NEWS",
+        "slug": "world-news",
+        "is_active": true,
+        "date_created": "2022-12-20T13:17:25.822Z",
+        "date_updated": "2022-12-20T13:17:25.822Z"
+    }
+},
+{
+    "model": "news.newscategory",
+    "pk": "e32a015d-d629-4424-9754-cc125f728f0a",
+    "fields": {
+        "name": "EROTIC",
+        "slug": "erotic",
+        "is_active": true,
+        "date_created": "2022-12-20T21:22:42.635Z",
+        "date_updated": "2022-12-20T21:22:42.635Z"
+    }
+}
+]

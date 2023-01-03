@@ -1,0 +1,62 @@
+[
+{
+    "model": "news.postnews",
+    "pk": "090a4cf8-fab7-43bc-96e3-36b1fa731ca4",
+    "fields": {
+        "user": 2,
+        "category": "46f5aa3b-3cdf-405b-86cf-e1f5952651fc",
+        "title": "CARDI B",
+        "content": "<p>dcgnglntng</p>",
+        "source": null,
+        "status": "published",
+        "date_created": "2022-12-20T21:06:00.765Z",
+        "slug": "cardi-b",
+        "date_updated": "2022-12-20T21:06:22.894Z"
+    }
+},
+{
+    "model": "news.postnews",
+    "pk": "443b78df-b980-4ff6-9247-07d4515da621",
+    "fields": {
+        "user": 2,
+        "category": "7ab26442-11e7-49b3-8cd2-e5644fbe478a",
+        "title": "Kenya; THE BLACK AXE",
+        "content": "<p>tHE NDHIPIXPIIPIIIIIIIIS JIJBIJBD</p>",
+        "source": null,
+        "status": "published",
+        "date_created": "2022-12-20T21:08:22.867Z",
+        "slug": "kenya-the-black-axe",
+        "date_updated": "2022-12-20T21:09:05.407Z"
+    }
+},
+{
+    "model": "news.postnews",
+    "pk": "ddb0f473-a27e-43c1-ae82-9c68ada8281b",
+    "fields": {
+        "user": 2,
+        "category": "7ab26442-11e7-49b3-8cd2-e5644fbe478a",
+        "title": "GHANA",
+        "content": "<p>jetjjyckiacakcyoaejcyauifynlndon[g</p>",
+        "source": null,
+        "status": "published",
+        "date_created": "2022-12-20T21:00:50.196Z",
+        "slug": "ghana",
+        "date_updated": "2022-12-20T21:03:04.277Z"
+    }
+},
+{
+    "model": "news.postnews",
+    "pk": "ebab7e3e-6606-4831-bb0c-84300165c51b",
+    "fields": {
+        "user": 2,
+        "category": "30530813-740b-42f0-bcdd-6e6e230ea0f6",
+        "title": "MESSI - SIMPLY THE BEST",
+        "content": "<div>\r\n<div style=\"text-align: right;\">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sapiente eos, deleniti tempora exercitationem cum perferendis, excepturi ab vero ad assumenda ipsum minima architecto, minus doloremque error corporis soluta veritatis itaque.</div>\r\n</div>",
+        "source": null,
+        "status": "published",
+        "date_created": "2022-12-20T13:59:43.593Z",
+        "slug": "mess-simply-the-best",
+        "date_updated": "2022-12-20T20:59:38.404Z"
+    }
+}
+]
