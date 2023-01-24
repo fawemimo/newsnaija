@@ -5,62 +5,58 @@
 
 <!-- NEWS POST UPLOAD SECTION -->
 {% block loading_content %}
-      <h1>
-        {{ object.category }}
-      </h1>
-  
-   
-          <img src="{{ object.user.profile.image.url }}" alt=""style="border-radius: 50%; width:100px; height:auto;">
-          
-            <p class="card-text">
-              <!-- <b><a href="">{{ object.user }}</a> -->
-                </b><br>
-                <b><i class="far fa-calendar-check"></i></b><small>{{ object.date_created | date:"F d, Y"}}</small>
-  
-          {% if request.user.is_authenticated %}
-                {% if request.user.is_staff %}
-                  {% if object.user == user %}
-                
-                  <a href="" class="btn btn-success"> 
-                    Update 
-                  </a>
-      
-                  <a href="{% url 'newspostdelete' object.slug object.id %}" class="btn btn-danger"> 
-                    Delete
-                  </a>
-                  
-                {% endif %}
-                  
-                {% endif %}
-            
-          {% endif %}
-          
-               
-            </p>
-  
-            <div class="card-body">
-              <h1 class="card-title">
-                  <a href="" class="link">
-                    {{ object.title | safe }}
-                  </a>               
-              </h1>
-  
-              
-              <p class="card-text">
-                {{ object.content | safe }}
-              </p>
-              
-           
-  
-              
-  
-        
-        </div>
-      </li>
-    </article>
-  
-  
-  </ul>
-  
-  
-{% endblock loading_content %}
+<h2></h2>
+<div class="container">
+  <div class="wrapper">
+    <div class="posts">
+      <div class="title">
+        <h2>
+          <a href=""> {{post.title}} </a>
+        </h2>
+      </div>
+      <div class="date">
+        <small> {{post.date_created}} </small>
+      </div>
+      <div class="content">
+        <h2>{{post.content |slice:'200' | safe}}</h2>
+      </div>
+    </div>
+    <h2>
+      Similar Posts by Tags
+    </h2>
+    <ul>
+      {% for x in similar_posts_by_tag  %}
+        <li>
+          <a href="{{x.get_absolute_url}}">{{x.title}}</a> 
+        </li>
+        {% empty %}
+        There are no similar posts by tag
+      {% endfor %}
+    </ul>
+    <h2>
+      Similar Posts For the last 7 days
+    </h2>
+    <ul>
+      {% for x in similar_posts %}
+        <li>
+          {{x.title}}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h2>
+      Recently Viewed
+    </h2>
+    <ul>
+      {% for x in recently_view_news_sorting %}
+        <p>          
+          <a href="{% url 'newspostdetail' slug=x.slug %}">{{x.title}}</a>
+        </p>
+      {% endfor %}
+    </ul>
+    {% endblock loading_content %}
+
+    <!-- STATIC JS -->
+    {% block scripts %} {% endblock scripts %}
+  </div>
+</div>

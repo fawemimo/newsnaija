@@ -3,7 +3,7 @@
 
 
 {% block loading_content %}
-    <form action="{% url 'newspostdelete' object.slug object.id %}" method="POST" id="delete-post" >
+    <form action="{% url 'newspostdelete' object.id %}" method="POST" id="delete-post" >
         {% csrf_token %}
         <fieldset>
             <legend>Delete News</legend>
@@ -11,7 +11,7 @@
         
             <div class="button">
                 <button type="submit" class="btn btn-danger"> Yes, DELETE</button>
-                <a href="{% url 'newspostdetail' object.slug object.id %}" class="btn btn-warning" id="cancel">cancel</a>
+                <a href="{% url 'newspostdetail' object.id %}" class="btn btn-warning" id="cancel">cancel</a>
             </div>
         </fieldset>
     </form>

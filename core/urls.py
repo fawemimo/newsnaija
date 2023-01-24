@@ -3,8 +3,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from .sitemaps import AllNewsSite
+from django.contrib.sitemaps.views import sitemap
 
+
+sitemaps = {
+    'maps':AllNewsSite
+}
 urlpatterns = [
+    path('sitemap.xml',sitemap,{'sitemaps':sitemaps}),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),    
     path('',include('news.urls')),

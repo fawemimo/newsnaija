@@ -3,6 +3,8 @@ from accounts.models import User
 from django.urls import reverse
 from uuid import uuid4
 from tinymce.models import HTMLField
+from django.utils.text import slugify
+# from taggit.managers import TaggableManager
 
 class NewsCategory(models.Model):
     """Model definition for NewsCategory."""
@@ -14,6 +16,8 @@ class NewsCategory(models.Model):
         verbose_name=("category safe URL"),
         help_text=("format: required, letters, numbers, underscore, or hyphens"),
     )
+    seo_title = models.CharField(max_length=255,default='')
+    seo_descriptions = models.TextField(default='')
     is_active = models.BooleanField(
         default=True,
     )
@@ -27,11 +31,26 @@ class NewsCategory(models.Model):
         """Meta definition for NewsCategory."""
 
         ordering = ("-date_created",)
-        verbose_name = "News Category"
-        verbose_name_plural = "News Categories"
+        verbose_name = "Article Category"
+        verbose_name_plural = "Articles Categories"
 
     def __str__(self):
         return self.name
+
+    # def get_absolute_url(self):
+    #     return reverse("newspostdetail")    
+
+class Tag(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid4)
+    name = models.CharField(verbose_name="Tag name", max_length=25, unique=True)   
+    slug = models.SlugField(verbose_name='URL related name',blank=True,null=True) 
+
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("postnewstag", kwargs={"slug": self.slug})
 
 
 class PostNewsObjects(models.Manager):
@@ -55,6 +74,7 @@ class PostNews(models.Model):
     )
     title = models.CharField(max_length=255)
     content = HTMLField()
+    tag = models.ManyToManyField(Tag, help_text=("You can select more than one options"))  
     source = models.CharField(
         max_length=255,
         blank=True,
@@ -67,9 +87,10 @@ class PostNews(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(
         max_length=255,
-        unique_for_date="date_created",
-        verbose_name=("url link related to title"),
+        
     )
+    seo_title = models.CharField(max_length=255,default='')
+    seo_descriptions = models.TextField(default='')
     date_updated = models.DateTimeField(
         auto_now=True,
         help_text=("format: Y-m-d H:M:S"),
@@ -81,14 +102,21 @@ class PostNews(models.Model):
         """Meta definition for PostNews."""
 
         ordering = ("-date_created",)
-        verbose_name = "Post News"
-        verbose_name_plural = "Post News"
+        verbose_name = "Article"
+        verbose_name_plural = "Articles"
 
     def __str__(self):
         return self.title
+    
+    def snippet(self):
+        return self.description[:150] + ' ...'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(PostNews, self).save(args, kwargs)    
 
     def get_absolute_url(self):
-        return reverse("newspostdetail", kwargs={"slug": self.slug, "id": self.id})
+        return reverse("newspostdetail", kwargs={"slug": self.slug})
 
 
 class PostNewsMedia(models.Model):
@@ -102,7 +130,7 @@ class PostNewsMedia(models.Model):
         blank=True,
         help_text=("format: optional,not neccessary to upload pics"),
     )
-    file = models.FileField(
+    media_file = models.FileField(
         upload_to="posts/files",
         verbose_name=("videos/audio/docs/pdf"),
         null=True,
@@ -113,28 +141,31 @@ class PostNewsMedia(models.Model):
         max_length=255,
         verbose_name=("alternative text"),
         help_text=("format: required, max-255"),
+        blank=True,
+        null=True
     )
     is_feature = models.BooleanField(
         default=False,
-        verbose_name=("Post News display image/files"),
+        verbose_name=("articles visibility as front display image"),
         help_text=("format: default=false, true=default image"),
-    )
+    )    
+    seo_keywords = models.CharField(max_length=255,default='')
+    seo_image = models.ImageField(upload_to="seo/images", blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=("post news visibility"),
         help_text=("format: Y-m-d H:M:S"),
     )
     updated_at = models.DateTimeField(
         auto_now=True,
-        verbose_name=("date post news created"),
+        verbose_name=("date articles created"),
         help_text=("format: Y-m-d H:M:S"),
     )
 
     class Meta:
         """Meta definition for PostNewsMedia."""
 
-        verbose_name = "Post News Media"
-        verbose_name_plural = "Post News Media"
+        verbose_name = "Article Media"
+        verbose_name_plural = "Articles Media"
 
     def __str__(self):
         return self.alt_text

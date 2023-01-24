@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Naija | Get the latest news on board </title>
-    
+    <title>9japointers | Get the latest news on board </title>
     <!-- STATIC CSS -->
     {% block extrastyle %}
-        
     {% endblock extrastyle %}
 </head>
 <body>
     <nav>
         <ul>
             <li>
-                <a href="{% url 'newspostlist' %}">
+                <a href="{% url 'articles_list' %}">
                     Home
                 </a>
             </li>
@@ -49,10 +47,7 @@
     {% endblock loading_content %}
     </section>
 
-    <!-- STATIC JS -->
-    {% block scripts %}
-        
-    {% endblock scripts %}
+   
 
     <!-- FOOTER -->
     <footer>
@@ -87,5 +82,10 @@
             </div>
         </main>
     </footer>
+
+     <!-- STATIC JS -->
+     {% block scripts %}
+        
+     {% endblock scripts %}
 </body>
 </html>

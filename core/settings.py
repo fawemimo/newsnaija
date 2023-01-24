@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
-from decouple import config
+from decouple import config #type: ignore
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = "8be1078ca645eb0545c5b71953075eef16347fea40d3a6fb"
 
 DEBUG = config("DEBUG")
 
@@ -12,6 +12,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "django.contrib.admin",
+    "django.contrib.sitemaps", #django sitemap
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -21,6 +22,7 @@ INSTALLED_APPS = [
     # django packages
     "debug_toolbar",
     "tinymce",
+    # "taggit",
     
     # install startapps
     "news.apps.NewsConfig",
@@ -103,6 +105,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "core/static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+# TAGGIT_CASE_INSENSITIVE = True
 
 # Debug settings
 INTERNAL_IPS = [
