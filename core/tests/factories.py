@@ -39,3 +39,17 @@ class PostNewsFactory(factory.django.DjangoModelFactory):
 
 
 register(PostNewsFactory)
+
+
+class PostNewsMediaFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = PostNewsMedia
+
+    postnews = factory.SubFactory(PostNewsFactory)    
+    images = "images/9japointers.png"
+    file = "bulk/video.mp4"
+    alt_text = "9japointers resources"
+    is_feature = True
+
+register(PostNewsMediaFactory)
