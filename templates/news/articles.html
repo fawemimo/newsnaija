@@ -5,6 +5,12 @@
 
 <!-- NEWS POST UPLOAD SECTION -->
 {% block loading_content %}
+<p>Hi {{ user.username }}!</p>
+<div>
+  <p>
+    <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+  </p>
+</div>
 <h2>Latest From Broad</h2>
 <div class="container">
   <div class="wrapper">

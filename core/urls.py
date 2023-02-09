@@ -38,6 +38,7 @@ urlpatterns = [
 
     # Django Packages
     path('tinymce/', include('tinymce.urls')),
+    path('oauth/', include('social_django.urls', namespace='social')),
 ]
 
 

@@ -19,15 +19,22 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # django packages
-    "debug_toolbar",
+    # django packages    
     "tinymce",
+    "social_django",
     # "taggit",
     
     # install startapps
     "news.apps.NewsConfig",
     "accounts.apps.AccountsConfig",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar"]
+    # Debug settings
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -39,6 +46,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'social_django.middleware.SocialAuthExceptionMiddleware',  # social login with facebook
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -54,12 +62,20 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'social_django.context_processors.backends',  # social
+                'social_django.context_processors.login_redirect', #social
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 DATABASES = {
     "default": {
@@ -98,6 +114,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = ''
+
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "core/static")]  
@@ -107,9 +125,8 @@ MEDIA_URL = "/media/"
 
 # TAGGIT_CASE_INSENSITIVE = True
 
-# Debug settings
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+
+SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET') 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
