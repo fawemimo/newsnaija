@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
-from decouple import config #type: ignore
+
+import sentry_sdk
+from decouple import config  # type: ignore
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,24 +13,39 @@ DEBUG = config("DEBUG")
 
 ALLOWED_HOSTS = []
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
-    "django.contrib.sitemaps", #django sitemap
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # django packages    
-    "tinymce",
-    "social_django",
-    # "taggit",
-    
-    # install startapps
-    "news.apps.NewsConfig",
-    "accounts.apps.AccountsConfig",
 ]
+
+THIRD_PARTY_APPS = [
+    "django.contrib.sitemaps",  # django sitemap
+    "django.contrib.sites",  # django sitemap enabled
+    "tinymce",
+]
+
+API_APPS = [
+    "api.apps.ApiConfig",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    "rest_framework",
+    "djoser"
+    # "django_elasticsearch_dsl",
+    # "social_django",
+]
+
+NAIJAPOINTER_APPS = [
+    "accounts.apps.AccountsConfig",
+    "news.apps.NewsConfig",
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + NAIJAPOINTER_APPS + API_APPS
+
+SITE_ID = 1
 
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]
@@ -46,7 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'social_django.middleware.SocialAuthExceptionMiddleware',  # social login with facebook
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',  # social login with facebook
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -62,8 +80,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                'social_django.context_processors.backends',  # social
-                'social_django.context_processors.login_redirect', #social
+                # 'social_django.context_processors.backends',  # social
+                # 'social_django.context_processors.login_redirect', #social
             ],
         },
     },
@@ -71,11 +89,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.twitter.TwitterOAuth',
-    'social_core.backends.facebook.FacebookOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#     'social_core.backends.twitter.TwitterOAuth',
+#     'social_core.backends.facebook.FacebookOAuth2',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
 
 DATABASES = {
     "default": {
@@ -83,7 +101,7 @@ DATABASES = {
         "NAME": config("NAME"),
         "USER": config("USER"),
         "HOST": config("HOST"),
-        "PASSWORD" : config("PASSWORD"),
+        "PASSWORD": config("PASSWORD"),
         "PORT": config("PORT"),
     }
 }
@@ -114,19 +132,102 @@ USE_I18N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = ""
+
+REST_FRAMEWORK = {
+    "COERCE_DECIMAL_TO_STRING": False,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdmin']
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'USER_CREATE_PASSWORD_RETYPE':True,
+    'SERIALIZERS': {},
+}
+
+
+# drf spectacular API
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Naijapointers API",
+    "DESCRIPTION": "Nigerian based news and covering some parts of the world News API docs",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "DEFAULT_GENERATOR_CLASS": "drf_spectacular.generators.SchemaGenerator",
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    'COMPONENT_SPLIT_REQUEST': True,
+    'COMPONENT_NO_READ_ONLY_REQUIRED': True
+}
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "core/static")]  
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "core/static")]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-# TAGGIT_CASE_INSENSITIVE = True
+ELASTICSEARCH_DSL = {"default": {"hosts": "localhost:9200"}}
 
 
-SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY')
-SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET') 
+SOCIAL_AUTH_FACEBOOK_KEY = "1170503466932912"
+SOCIAL_AUTH_FACEBOOK_SECRET = "95040e71ee3e6f61981e356760e02a5e"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# sentry error
+
+sentry_sdk.init(
+    dsn= config('DSN'),
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
+
+
+# Logging errors
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'mainroot.log',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'file'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL','INFO')
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} ({levelname}) - {name} - {message}',
+            'style': '{'
+        }
+    }
+    
+}

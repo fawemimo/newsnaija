@@ -1,6 +1,0 @@
-Tag: {% for tag in post.tag.all %}
-          <a href="">{{ tag.name}}</a>
-          {% if not forloop.last %},
-            
-          {% endif %}
-        {% endfor %}

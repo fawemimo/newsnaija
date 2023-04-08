@@ -1,17 +1,19 @@
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from .sitemaps import AllNewsSite
 from django.contrib.sitemaps.views import sitemap
+from django.urls import include, path
 
+from .sitemaps import AllNewsSite
 
 sitemaps = {
     'maps':AllNewsSite
 }
+
+
 urlpatterns = [
-    path('sitemap.xml',sitemap,{'sitemaps':sitemaps}),
+    path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name='django.contrib.sitemaps.views.sitemap'),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),    
     path('',include('news.urls')),
@@ -38,7 +40,8 @@ urlpatterns = [
 
     # Django Packages
     path('tinymce/', include('tinymce.urls')),
-    path('oauth/', include('social_django.urls', namespace='social')),
+    path('api/',include('api.urls')),
+    # path('oauth/', include('social_django.urls', namespace='social')),
 ]
 
 

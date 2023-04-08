@@ -1,7 +1,9 @@
+from uuid import UUID, uuid4
+
 import pytest
-from news.models import *
 from django.db import IntegrityError
-from uuid import uuid4, UUID
+
+from news.models import *
 
 
 @pytest.mark.dbfixture

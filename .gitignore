@@ -178,3 +178,7 @@ dmypy.json
 
 # 
 chromedriver.exe
+/archive/
+archive/
+mainroot.log
+.tox

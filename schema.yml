@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info:
+  title: Naijapointers API
+  version: 1.0.0
+  description: Nigerian based news and covering some parts of the world News API docs
+paths:
+  /api/postnews/:
+    get:
+      operationId: postnews_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - postnews
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPostNewsList'
+          description: ''
+  /api/postnews/{slug}/:
+    get:
+      operationId: postnews_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - postnews
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostNews'
+          description: ''
+  /api/postnews/{slug}/recentlyviewposts/:
+    get:
+      operationId: postnews_recentlyviewposts_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - postnews
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostNews'
+          description: ''
+  /api/postnewswithsimilartags/:
+    get:
+      operationId: postnewswithsimilartags_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - postnewswithsimilartags
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTagList'
+          description: ''
+  /api/postnewswithsimilartags/{slug}/:
+    get:
+      operationId: postnewswithsimilartags_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - postnewswithsimilartags
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+components:
+  schemas:
+    PaginatedPostNewsList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostNews'
+    PaginatedTagList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    PostNews:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        category:
+          type: string
+          format: uuid
+          title: News Category
+        title:
+          type: string
+          maxLength: 255
+        content:
+          type: string
+        tag:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          readOnly: true
+        source:
+          type: string
+          nullable: true
+          title: News source
+          description: 'format: it could be links or person name'
+          maxLength: 255
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        date_created:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 255
+          pattern: ^[-a-zA-Z0-9_]+$
+        seo_title:
+          type: string
+          maxLength: 255
+        seo_descriptions:
+          type: string
+        date_updated:
+          type: string
+          format: date-time
+          readOnly: true
+          description: 'format: Y-m-d H:M:S'
+      required:
+      - category
+      - content
+      - date_created
+      - date_updated
+      - slug
+      - tag
+      - title
+    StatusEnum:
+      enum:
+      - draft
+      - published
+      type: string
+      description: |-
+        * `draft` - Draft
+        * `published` - Published
+    Tag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          title: Tag name
+          maxLength: 25
+        slug:
+          type: string
+          nullable: true
+          title: URL related name
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+      required:
+      - name
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,8 +1,9 @@
 import factory
 from faker import Faker
 from pytest_factoryboy import register
-from news.models import *
+
 from accounts.models import User
+from news.models import *
 
 fake = Faker()
 

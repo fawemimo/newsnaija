@@ -1,22 +1,20 @@
 import datetime
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    TemplateView,
-    UpdateView,
-    View,
-)
-from .models import *
+import requests
+import asyncio
+import json
+from django.http import HttpResponse
+from datetime import datetime
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib import messages
 from django.db.models import Count
-from datetime import datetime
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views.generic import DeleteView
+import aiohttp
+from .models import *
 
 
 def articles_list(request, tag_slug=None):
@@ -33,7 +31,7 @@ def articles_list(request, tag_slug=None):
 
 
 def articles_detail(request, slug):
-    post = PostNews.postnewsobjects.get(slug=slug) 
+    post = PostNews.postnewsobjects.filter(slug=slug) 
 
     # recently view post
     recently_view_news_sorting = None
@@ -54,12 +52,12 @@ def articles_detail(request, slug):
     # similar posts for 7days past
     next_day = datetime.today() - timezone.timedelta(days=7)
     today = datetime.today()
-    similar_posts = PostNews.postnewsobjects.filter(slug=slug).select_related('category').filter(date_created__range=(next_day,today)).exclude(id=post.id)[:5]
-
+    similar_posts = PostNews.postnewsobjects.filter(slug=slug).select_related('category').filter(date_created__range=(next_day,today))
+# .exclude(id=post.id)[:5]
     # similar posts with tags
-    # news_tag = PostNews.postnewsobjects.prefetch_related('tag')
     news_tag = Tag.objects.prefetch_related('postnews_set')
-    similar_posts_by_tag = PostNews.postnewsobjects.filter(tag__in=news_tag).exclude(id=post.id)
+    similar_posts_by_tag = PostNews.postnewsobjects.filter(tag__in=news_tag)
+    # .exclude(id=post.id)
     similar_posts_by_tag = similar_posts_by_tag.annotate(same_tag=Count('tag'))[:5]
     context = {
         'post':post,
@@ -87,3 +85,15 @@ class NewsPostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
 
         return False
+
+
+async def load_quotes(request):
+    # async with aiohttp.ClientSession() as session:
+    #     async with session.get('https://www.goodreads.com/quotes/tag/life') as res:
+    #         data = await res.json()
+    #         print(data)
+    r = requests.get('https://www.goodreads.com/quotes/tag/life')
+    print(r.json())
+    # post = PostNews()
+    # post.save()
+    return render(request,  "news/in.html")

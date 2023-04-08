@@ -1,7 +1,8 @@
 import pytest
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from django.test import LiveServerTestCase
+
 
 @pytest.fixture(scope="module")
 def chrome_browser_instance(request):

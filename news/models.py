@@ -1,9 +1,12 @@
-from django.db import models
-from accounts.models import User
-from django.urls import reverse
 from uuid import uuid4
-from tinymce.models import HTMLField
+
+from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
+from tinymce.models import HTMLField
+
+from accounts.models import User
+
 # from taggit.managers import TaggableManager
 
 class NewsCategory(models.Model):
@@ -44,7 +47,6 @@ class Tag(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4)
     name = models.CharField(verbose_name="Tag name", max_length=25, unique=True)   
     slug = models.SlugField(verbose_name='URL related name',blank=True,null=True) 
-
 
     def __str__(self):
         return str(self.name)
@@ -168,4 +170,4 @@ class PostNewsMedia(models.Model):
         verbose_name_plural = "Articles Media"
 
     def __str__(self):
-        return self.alt_text
+        return str(self.id)

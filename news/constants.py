@@ -1,0 +1,1 @@
+TAGS = ['knowledge', 'philosophy', 'love', 'life','wisdom']

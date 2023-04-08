@@ -8,7 +8,7 @@
 <p>Hi {{ user.username }}!</p>
 <div>
   <p>
-    <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+    <a href="">Login with Facebook</a>
   </p>
 </div>
 <h2>Latest From Broad</h2>
@@ -38,7 +38,7 @@
           
         {% endfor %}
         <h2>
-          <a href="{% url 'newspostdetail' slug=post.slug %}"> {{post.title}} </a>
+          <a href="{% url 'newspostdetail' post.slug %}"> {{post.title | safe }} </a>
         </h2>
       </div>
       <div class="date">
